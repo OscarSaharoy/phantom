@@ -1,0 +1,58 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    overflow-x: hidden;
+    overflow: hidden;
+}
+
+#container {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+}
+
+#layout {
+	justify-self: center;
+	align-self: center;
+	width: min( 100vw, 100vh );
+	height: min( 100vw, 100vh );
+    display: grid;
+	grid-template-rows: 6rem 1fr 6rem;
+	grid-template-columns: 6rem 1fr 6rem;
+}
+
+#shader-canvas {
+	display: grid;
+	grid-row: 2;
+	grid-column: 2;
+	align-self: stretch;
+	justify-self: stretch;
+	padding: 2rem;
+    background: #fafafa;
+	border-top: 1.5rem solid #e8e8e8;
+	border-right: 2rem solid #f4f4f4;
+	border-bottom: 2rem solid #f8f8f8;
+	border-left: 2.5rem solid #f4f4f4;
+}
+
+#layout img {
+	opacity: 50%;
+	grid-row: 2;
+	justify-self: center;
+	align-self: center;
+	padding: 2rem;
+	cursor: pointer;
+}
+#layout img:hover {
+	opacity: 100%;
+}
+
+#layout p {
+	grid-column: 2;
+	align-self: center;
+	justify-self: center;
+}
