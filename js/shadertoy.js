@@ -13,8 +13,8 @@ import vertShader from "../glsl/vert.glsl.js";
 const settings = {
   xThreshold: 20,
   yThreshold: 35,
-  originalImagePath: '../imgs/dog-photo.jpg',
-  depthImagePath: '../imgs/dog-depth-map.webp',
+  originalImagePath: './imgs/dog-photo.jpg',
+  depthImagePath: './imgs/dog-depth-map.webp',
 }
 
 // Sizes
