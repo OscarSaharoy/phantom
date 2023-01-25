@@ -5,25 +5,81 @@ import fragShader from "../glsl/frag.glsl.js";
 import vertShader from "../glsl/vert.glsl.js";
 
 
+let stateIndex = 0;
+const states = [
+	{
+		imagePath: "./imgs/phantom.png",
+		depthMapPath: "./imgs/phantom-depth.png",
+		title: "Oscar's Journey - an AI story.",
+		description: "Please use the arrows to navigate, and tap/click and drag to look around the images!",
+	},
+	{
+		imagePath: "./imgs/workinghard.png",
+		depthMapPath: "./imgs/workinghard-depth.png",
+		title: "The Grind",
+		description: "Oscar works hard on his project - can he get it done?",
+	},
+	{
+		imagePath: "./imgs/submitting.png",
+		depthMapPath: "./imgs/submitting-depth.png",
+		title: "Submission",
+		description: "Oscar completed the task! He submits it with a smile.",
+	},
+	{
+		imagePath: "./imgs/recieving2.png",
+		depthMapPath: "./imgs/recieving2-depth.png",
+		title: "First Impression at Phantom HQ",
+		description: "\"Now just what the hell is this, Doris?\"",
+	},
+	{
+		imagePath: "./imgs/convincing.png",
+		depthMapPath: "./imgs/convincing-depth.png",
+		title: "Doris Tries to win Jim Over",
+		description: "\"I know his project turned out weird, but just give him a chance, Jim!\"",
+	},
+	{
+		imagePath: "./imgs/thinking.png",
+		depthMapPath: "./imgs/thinking-depth.png",
+		title: "Jim's Contemplation",
+		description: "\"That kid Oscar has some funky ideas... we could use that.\"",
+	},
+	{
+		imagePath: "./imgs/phonecall.png",
+		depthMapPath: "./imgs/phonecall-depth.png",
+		title: "The Phone Call",
+		description: "\"Oscar, you got the job!\" Oscar is over the moon.",
+	},
+	{
+		imagePath: "./imgs/celebration.png",
+		depthMapPath: "./imgs/celebration-depth.png",
+		title: "The Rave",
+		description: "Time to hit the disco to celebrate.",
+	},
+	{
+		imagePath: "./imgs/lunch.png",
+		depthMapPath: "./imgs/lunch-depth.png",
+		title: "Lunch with the Team",
+		description: "The first lunch with the whole team is amazing. Oscar manages to look past the facial deformities and has a great time.",
+	},
+	{
+		imagePath: "./imgs/besttocome.png",
+		depthMapPath: "./imgs/besttocome-depth.png",
+		title: "The Future",
+		description: "The possibilities for the things the team will build together are limitless; the best is still to come!",
+	},
+];
 
-// Main Settings
-const settings = {
-  originalImagePath: './imgs/dog-photo.jpg',
-  depthImagePath: './imgs/dog-depth-map.webp',
-}
-
-// Image Details
-let originalImage = null
-let depthImage = null
-
-const images = [];
-const depthMaps = [];
-let imageIndex = 0;
 
 
 const canvas   = document.querySelector('canvas');
 const scene    = new THREE.Scene()
 const renderer = new THREE.WebGLRenderer({ canvas: canvas })
+const textureLoader = new THREE.TextureLoader();
+
+const title = document.getElementById( "title" );
+const description = document.getElementById( "description" );
+const leftArrow = document.getElementById( "left" );
+const rightArrow = document.getElementById( "right" );
 
 
 const camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0, 2 );
@@ -34,8 +90,8 @@ scene.add( camera );
 const planeGeometry = new THREE.PlaneBufferGeometry(2, 2);
 const planeMaterial = new THREE.ShaderMaterial({
 	uniforms: {
-		originalTexture: { value: originalImage },
-		depthTexture: { value: depthImage },
+		originalTexture: { value: null },
+		depthTexture: { value: null },
 		uMouse: { value: new THREE.Vector2(0, 0) },
 		uTransitionTime: { value: 0 },
 	},
@@ -46,25 +102,31 @@ const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 scene.add( plane );
 
 
-const textureLoader = new THREE.TextureLoader();
+function loadImages( state ) {
 
-const loadImages = () => {
-
-	if(originalImage !== null || depthImage !== null)
-	{
-		originalImage.dispose()
-		depthImage.dispose()
-	}
-	depthImage = textureLoader.load(settings.depthImagePath)
-
-	originalImage = textureLoader.load( settings.originalImagePath, function ( tex ) {
-
-		planeMaterial.uniforms.originalTexture.value = originalImage;
-		planeMaterial.uniforms.depthTexture.value = depthImage;
-	} );
-	
+	state.image = textureLoader.load( state.imagePath );
+	state.depthMap = textureLoader.load( state.depthMapPath );
 }
-loadImages()
+
+states.forEach( loadImages );
+
+
+function setState( state ) {
+
+	planeMaterial.uniforms.originalTexture.value = state.image;
+	planeMaterial.uniforms.depthTexture.value = state.depthMap;
+	title.textContent = state.title;
+	description.textContent = state.description;
+
+	leftArrow.style.visibility  = stateIndex == 0 ? "hidden" : "visible";
+	rightArrow.style.visibility = stateIndex == states.length - 1 ? "hidden" : "visible";
+}
+
+setState( states[stateIndex] );
+
+leftArrow.onclick  = () => setState( states[--stateIndex] );
+rightArrow.onclick = () => setState( states[++stateIndex] );
+
 
 
 

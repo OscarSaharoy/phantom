@@ -16,7 +16,7 @@ vec2 mirrored(vec2 v) {
 }
 
 void main() {
-	vec4 depthMap = texture2D(depthTexture, mirrored(vUv));
+	vec4 depthMap = 2.*texture2D(depthTexture, mirrored(vUv));
 	vec2 fake3d = vec2(vUv.x + (depthMap.r - 0.5) * uMouse.x, vUv.y + (depthMap.r - 0.5) * uMouse.y );
 
 	gl_FragColor = texture2D(originalTexture,mirrored(fake3d));
