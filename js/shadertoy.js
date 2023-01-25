@@ -149,6 +149,7 @@ function setState( state ) {
 }
 
 setState( states[stateIndex] );
+planeMaterial.uniforms.uTransitionTime.value = 3;
 
 leftArrow.onclick  = () => setState( states[--stateIndex] );
 rightArrow.onclick = () => setState( states[++stateIndex] );
