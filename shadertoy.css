@@ -5,8 +5,6 @@
 }
 
 body, html {
-    overflow-x: hidden;
-    overflow: hidden;
 	touch-action: none;
 	font-family: 'Source Serif Pro', serif;
 }
@@ -34,12 +32,7 @@ body, html {
 	grid-column: 2;
 	align-self: stretch;
 	justify-self: stretch;
-	padding: 5vmin;
     background: #fafafa;
-	border-top: 5vmin solid #e8e8e8;
-	border-right: 5vmin solid #f4f4f4;
-	border-bottom: 5vmin solid #f8f8f8;
-	border-left: 5vmin solid #f4f4f4;
 	max-width: 84vmin;
 }
 
