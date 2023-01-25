@@ -12,60 +12,70 @@ const states = [
 		depthMapPath: "./imgs/phantom-depth.png",
 		title: "Oscar's Journey - an AI story.",
 		description: "Please use the arrows to navigate, and tap/click and drag to look around the images!",
+		depthScale: 1,
 	},
 	{
 		imagePath: "./imgs/workinghard.png",
 		depthMapPath: "./imgs/workinghard-depth.png",
 		title: "The Grind",
 		description: "Oscar works hard on his project - can he get it done?",
+		depthScale: 2,
 	},
 	{
 		imagePath: "./imgs/submitting.png",
 		depthMapPath: "./imgs/submitting-depth.png",
 		title: "Submission",
 		description: "Oscar completed the task! He submits it with a smile.",
+		depthScale: 2,
 	},
 	{
 		imagePath: "./imgs/recieving2.png",
 		depthMapPath: "./imgs/recieving2-depth.png",
 		title: "First Impression at Phantom HQ",
 		description: "\"Now just what the hell is this, Doris?\"",
+		depthScale: 2,
 	},
 	{
 		imagePath: "./imgs/convincing.png",
 		depthMapPath: "./imgs/convincing-depth.png",
 		title: "Doris Tries to win Jim Over",
 		description: "\"I know his project turned out weird, but just give him a chance, Jim!\"",
+		depthScale: 2,
 	},
 	{
 		imagePath: "./imgs/thinking.png",
 		depthMapPath: "./imgs/thinking-depth.png",
 		title: "Jim's Contemplation",
 		description: "\"That kid Oscar has some funky ideas... we could use that.\"",
+		depthScale: 2,
 	},
 	{
 		imagePath: "./imgs/phonecall.png",
 		depthMapPath: "./imgs/phonecall-depth.png",
 		title: "The Phone Call",
 		description: "\"Oscar, you got the job!\" Oscar is over the moon.",
+		depthScale: 3,
 	},
 	{
 		imagePath: "./imgs/celebration.png",
 		depthMapPath: "./imgs/celebration-depth.png",
 		title: "The Rave",
 		description: "Time to hit the disco to celebrate.",
+		depthScale: 4,
 	},
 	{
 		imagePath: "./imgs/lunch.png",
 		depthMapPath: "./imgs/lunch-depth.png",
 		title: "Lunch with the Team",
 		description: "The first lunch with the whole team is amazing. Oscar manages to look past the facial deformities and has a great time.",
+		depthScale: 4,
 	},
 	{
 		imagePath: "./imgs/besttocome.png",
 		depthMapPath: "./imgs/besttocome-depth.png",
 		title: "The Future",
 		description: "The possibilities for the things the team will build together are limitless; the best is still to come!",
+		depthScale: 6,
 	},
 ];
 
@@ -90,9 +100,13 @@ scene.add( camera );
 const planeGeometry = new THREE.PlaneBufferGeometry(2, 2);
 const planeMaterial = new THREE.ShaderMaterial({
 	uniforms: {
+		oldOriginalTexture: { value: null },
+		oldDepthTexture: { value: null },
 		originalTexture: { value: null },
 		depthTexture: { value: null },
 		uMouse: { value: new THREE.Vector2(0, 0) },
+		uDepthScale: { value: 1 },
+		uOldDepthScale: { value: 1 },
 		uTransitionTime: { value: 0 },
 	},
 	fragmentShader: fragShader,
@@ -113,8 +127,20 @@ states.forEach( loadImages );
 
 function setState( state ) {
 
+	planeMaterial.uniforms.oldOriginalTexture.value = planeMaterial.uniforms.originalTexture.value;
+	planeMaterial.uniforms.oldDepthTexture.value = planeMaterial.uniforms.depthTexture.value;
+	planeMaterial.uniforms.uOldDepthScale.value = planeMaterial.uniforms.uDepthScale.value;
+
 	planeMaterial.uniforms.originalTexture.value = state.image;
 	planeMaterial.uniforms.depthTexture.value = state.depthMap;
+	planeMaterial.uniforms.uDepthScale.value = state.depthScale;
+
+	planeMaterial.uniforms.uTransitionTime.value =
+		planeMaterial.uniforms.uTransitionTime.value > 2 ? 0 :
+		planeMaterial.uniforms.uTransitionTime.value;
+
+	console.log(planeMaterial.uniforms);
+
 	title.textContent = state.title;
 	description.textContent = state.description;
 
